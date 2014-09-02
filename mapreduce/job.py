@@ -375,14 +375,13 @@ class Mapper:
                 print "Error opening", input_file["name"], "(skipping)"
                 traceback.print_exc(file=sys.stderr)
                 continue
-            line_num = 0
-            for line in input_file["handle"]:
-                line_num += 1
+            for line_num, line in enumerate(input_file["handle"]):
                 try:
                     # Remove the trailing EOL character(s) before passing to
                     # the map function.
                     key, value = line.rstrip('\r\n').split("\t", 1)
-                    mapfunc(key, input_file["dimensions"], value, context)
+                    mapfunc(key, input_file["dimensions"], value, context,
+                        filename=input_file['name'], line_num=line_num)
                 except ValueError, e:
                     # TODO: increment "bad line" metrics.
                     print "Bad line:", input_file["name"], ":", line_num, e
